@@ -2,25 +2,13 @@
 #include <stdlib.h>
 #include <ctype.h>
 #include <string.h>
+#include "conversions.h"
+#include "utils.h"
+
 
 void print_screen();
-void flush();
 void convert(char user_choice);
 
-char check_input(char *input);
-
-int check_float(char *buffer);
-
-float celsius_to_fahrenheit(float temp);
-float celsius_to_kelvin(float temp);
-float fahrenheit_to_celsius(float temp);
-float fahrenheit_to_kelvin(float temp);
-float kelvin_to_celsius(float temp);
-float kelvin_to_fahrenheit(float temp);
-
-
-const float nine_over_five = 9.0/5.0;
-const float five_over_nine = 5.0/9.0;
 
 void print_screen() {
     printf("What conversion type do you want to do?\n");
@@ -31,25 +19,6 @@ void print_screen() {
     printf("Type 5 for Kelvin -> Celsius conversion\n");
     printf("Type 6 for Kelvin -> Fahrenheit conversion\n");
     printf("Type anything else to exit program\n");
-}
-
-char check_input(char *input) {
-    if (!isdigit(input[0])) { return '0'; }
-    if (isalnum(input[1])) { return '0'; }
-
-    char user_choice = input[0];
-    if (user_choice == '1' || user_choice == '2' || user_choice == '3' || 
-        user_choice == '4' || user_choice == '5' || user_choice == '6') {
-        return user_choice;
-    }
-
-    return '0';
-    
-}
-
-void flush() {
-    int c;
-    while ((c = getchar()) != EOF && c != '\n');
 }
 
 
@@ -103,25 +72,6 @@ void convert(char user_choice) {
     }
 }
 
-int check_float(char *buffer) {
-    size_t i = 0;
-    if (buffer[i] == '-' || buffer[i] == '+') 
-        i += 1;
-    
-    int dot_count = 0;
-    while (buffer[i] != '\n' && buffer[i] != '\0') {
-        if (buffer[i] == '.') {
-            dot_count += 1;
-            if (dot_count > 1) 
-                return -1;
-        }
-        if (!isdigit(buffer[i])) { return -1; }
-        i += 1;
-        if (i > sizeof(buffer) - 1) { return -1; }
-    }
-    return 1;
-}
-
 int main() {
 
     while (1) {
@@ -145,29 +95,3 @@ int main() {
     
     return 0;
 }
-
-float celsius_to_fahrenheit(float temp) {
-    return 32.0 + (temp * nine_over_five);
-}
-
-float celsius_to_kelvin(float temp) {
-    return 273.15 + temp;
-}
-
-float fahrenheit_to_celsius(float temp) {
-    return five_over_nine * (temp - 32.0); 
-}
-
-float fahrenheit_to_kelvin(float temp) {
-    return 273.15 + fahrenheit_to_celsius(temp);
-}
-
-float kelvin_to_celsius(float temp) {
-    return temp - 273.15;
-}
-
-float kelvin_to_fahrenheit(float temp) {
-    float celsius = kelvin_to_celsius(temp);
-    return celsius_to_fahrenheit(celsius);
-}
-
